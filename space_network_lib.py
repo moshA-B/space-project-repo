@@ -92,15 +92,3 @@ class SpaceNetwork:
         )
         dest_entity.receive_signal(packet)
 
-class Satellite(SpaceEntity):
-    def __init__(self,name, distance_from_earth):
-        super().__init__(name, distance_from_earth)
-
-    def receive_signal(self,packet: Packet):
-        print(f"[{self.name}] Received: {packet}")
-
-network1=SpaceNetwork()
-sat1=Satellite("TWS1",100)
-sat2=Satellite("TWS2",200)
-message=Packet("12 knots to the right",sat1,sat2)
-network1.send(message)
