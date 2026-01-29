@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import random
-
+import time
 
 class CommsError(Exception):
     """Base class for communication errors."""
@@ -92,3 +92,36 @@ class SpaceNetwork:
         )
         dest_entity.receive_signal(packet)
 
+
+    def attempt_transmission(self,package):
+        while True:
+            try:
+                self.send(package)
+                break
+            except TemporalInterferenceError:
+                print("...Interference, waiting")
+                time.sleep(2)
+            except DataCorruptedError:
+                print("data corrupted, retrying...")
+
+
+
+
+
+class Satellite(SpaceEntity):
+    def __init__(self,name, distance_from_earth):
+        super().__init__(name, distance_from_earth)
+
+    def receive_signal(self,packet: Packet):
+        print(f"[{self.name}] Received: {packet}")
+
+
+
+
+
+
+network1=SpaceNetwork(2)
+sat1=Satellite("TWS1",100)
+sat2=Satellite("TWS2",200)
+message=Packet("12 knots to the right",sat1,sat2)
+network1.attempt_transmission(message)
